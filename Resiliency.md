@@ -31,3 +31,15 @@ They can be used to log changes to a MongoDB collection.
 They output cursors, which contain change event documents.
 They accept pipelines, which can be used to filter output from the change stream.
 
+4. Connection Pooling Ticket?
+
+Ans: 5ad4f4f58d4b377bcf55d742
+
+5. Timeouts Ticket?
+
+Ans: 5addf035498efdeb55e90b01
+
+6. Handling errors Ticket?
+
+Ans: 5ae9b76a703c7c603202ef22
+
