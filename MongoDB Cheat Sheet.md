@@ -31,10 +31,7 @@ db.coll.insertOne({name: "Max"})
 db.coll.insert([{name: "Max"}, {name:"Alex"}]) // ordered bulk insert
   
 db.coll.insert([{name: "Max"}, {name:"Alex"}], {ordered: false}) // unordered bulk insert
-  
-db.coll.insert({date: ISODate()})
-  
-db.coll.insert({name: "Max"}, {"writeConcern": {"w": "majority", "wtimeout": 5000}})
+    
 
 #### 2.Read
   
@@ -45,10 +42,7 @@ db.coll.find({"cast": "Salma Hayek"})    // returns a cursor - show 20 results
 db.coll.find({"cast": "Salma Hayek"}).pretty()
   
 db.coll.find({name: "Max", age: 32}) // implicit logical "AND".
-  
-db.coll.find({name: "Max", age: 32}).explain("executionStats") // or "queryPlanner" or "allPlansExecution"
-  
-db.coll.distinct("name")
+    
 
 ##### 2.1 Count
   
@@ -58,19 +52,18 @@ db.coll.estimatedDocumentCount()
 
 ##### 2.2 Comparison
   
-db.coll.find({"year": {$gt: 1970}})
+db.coll.find({"year": {$gt: 1970}})  //gt--greater than
   
-db.coll.find({"year": {$gte: 1970}})
+db.coll.find({"year": {$gte: 1970}})  //gte--greater than or equal to
   
-db.coll.find({"year": {$lt: 1970}})
+db.coll.find({"year": {$lt: 1970}}) //lt--smaller than
   
-db.coll.find({"year": {$lte: 1970}})
+db.coll.find({"year": {$lte: 1970}})  //lt--smaller than or equal to
   
-db.coll.find({"year": {$ne: 1970}})
+db.coll.find({"year": {$ne: 1970}})  //ne--not equal
   
-db.coll.find({"year": {$in: [1958, 1959]}})
+db.coll.find({"year": {$in: [1958, 1959]}}) //in--value equa; to specified value
   
-db.coll.find({"year": {$nin: [1958, 1959]}})
 
 ##### 2.3 Logical
   
@@ -89,7 +82,7 @@ db.coll.find({
 
 ##### 2.4 Element
   
-db.coll.find({name: {$exists: true}})
+db.coll.find({name: {$exists: true}})  
   
 db.coll.find({"zipCode": {$type: 2 }})
   
@@ -100,20 +93,14 @@ db.coll.find({"zipCode": {$type: "string"}})
 db.coll.aggregate([
   {$match: {status: "A"}},
   {$group: {_id: "$cust_id", total: {$sum: "$amount"}}},
-  {$sort: {total: -1}}
+  {$sort: {total: -1}} 
 ])
 
 ##### 2.6 Text search with a "text" index
   
 db.coll.find({$text: {$search: "cake"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
 
-##### 2.7 Regex
-  
-db.coll.find({name: /^Max/})   // regex: starts by letter "M"
-  
-db.coll.find({name: /^Max$/i}) // regex case insensitive
-
-##### 2.8 Array
+##### 2.7 Array
   
 db.coll.find({tags: {$all: ["Realm", "Charts"]}})
   
@@ -121,12 +108,12 @@ db.coll.find({field: {$size: 2}})        // impossible to index - prefer storing
   
 db.coll.find({results: {$elemMatch: {product: "xyz", score: {$gte: 8}}}})
 
-##### 2.9 Projections
-db.coll.find({"x": 1}, {"actors": 1})                   // actors + _id
+##### 2.8 Projections
+db.coll.find({"x": 1}, {"actors": 1})                   // actors and _id
   
-db.coll.find({"x": 1}, {"actors": 1, "_id": 0})        // actors
+db.coll.find({"x": 1}, {"actors": 1, "_id": 0})        // want actors
   
-db.coll.find({"x": 1}, {"actors": 0, "summary": 0})   // all but "actors" and "summary"
+db.coll.find({"x": 1}, {"actors": 0, "summary": 0})   // all but don't "actors" and "summary"
 
 ##### 2.10 Sort, skip, limit
   
@@ -178,7 +165,6 @@ db.coll.updateOne({"_id": 1, "grades": 80}, {$set: {"grades.$": 82}})
   
 db.coll.updateMany({}, {$inc: {"grades.$[]": 10}})
   
-db.coll.update({}, {$set: {"grades.$[element]": 100}}, {multi: true, arrayFilters: [{"element": {$gte: 100}}]})
 
 ##### 3.2.Update many
   
@@ -192,7 +178,7 @@ db.coll.findOneAndUpdate({"name": "Max"}, {$inc: {"points": 5}}, {returnNewDocum
 
 ##### 3.4 Upsert
   
-db.coll.update({"_id": 1}, {$set: {item: "apple"}, $setOnInsert: {defaultQty: 100}}, {upsert: true})
+db.coll.update({"_id": 1}, {$set: {item: "apple"},{upsert: true})
 
 ##### 3.5.Replace
   
@@ -224,39 +210,11 @@ db.deletes.delete_one({'_id': 99})
   
 db.deletes.delete_many({'random_bool': False})
 
-### Databases and Collections
-
-#### 1. Drop
+####  Drop
   
 db.coll.drop()          // removes the collection and its index definitions
   
 db.dropDatabase()       // double check that you are *NOT* on the PROD cluster... :-)
-
-#### 2. Create Collection
-  
-Create collection with a $jsonschema:
-
-db.createCollection("contacts", {
-   validator: {$jsonSchema: {
-      bsonType: "object",
-      required: ["phone"],
-      properties: {
-         phone: {
-            bsonType: "string",
-            description: "must be a string and is required"
-         },
-         email: {
-            bsonType: "string",
-            pattern: "@mongodb\.com$",
-            description: "must be a string and match the regular expression pattern"
-         },
-         status: {
-            enum: [ "Unknown", "Incomplete" ],
-            description: "can only be one of the enum values"
-         }
-      }
-   }}
-})
 
 ### Indexes
 
@@ -299,10 +257,4 @@ db.coll.createIndex({"name": 1 }, {sparse: true})
 ##### 2.3 Drop Indexes
   
 db.coll.dropIndex("name_1")
-
-##### 2.4 Hide/Unhide Indexes
-  
-db.coll.hideIndex("name_1")
-  
-db.coll.unhideIndex("name_1")
 
