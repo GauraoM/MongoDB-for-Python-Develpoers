@@ -72,3 +72,31 @@ delete_many() can delete any number of documents.
 DeleteResult objects contain the number of deleted documents(by acknowledgement).
 delete_one() can only delete one document.
 
+8.Paging Ticket?
+
+Ans: 5a9824d057adff467fb1f526
+
+9.Faceted search Ticket?
+
+Ans: 5aa7d3948adcc3fb770f06fb
+
+10. User Management Ticket?
+
+Ans: 5a8d8ee2f9588ca2701894be
+
+11. User Preference Ticket?
+
+Ans: 5aabe31503ac76bc4f73e267
+
+12. Get Comments Ticket?
+
+Ans: 5ab5094fb526e43b570e4633
+
+13. Create/ update comments Ticket?
+
+Ans: 5aba8d5113910c25d7058f8f
+
+14. Delete Comments Ticket?
+
+Ans: 5ac25c280a80ed6e67e1cecb
+
