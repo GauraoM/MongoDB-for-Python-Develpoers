@@ -18,3 +18,11 @@ Ans: local , majority
 Ans:
 By default, bulk writes are ordered.
 Bulk writes decrease the effect of latency on overall operation time.
+
+3. User report Ticket?
+
+Ans: 5accad3272455e5db79e4dad
+
+4. Migration Ticket?
+
+Ans: 5ad9f6a64fec134d116fb06f
